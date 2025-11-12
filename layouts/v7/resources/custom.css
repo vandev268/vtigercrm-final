@@ -856,7 +856,7 @@ body {
   background: linear-gradient(to bottom, #449d44 0%, #357a35 100%) !important;
   border-color: #357a35 !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
 #exportChartBtn i {
