@@ -4254,6 +4254,10 @@ class ReportRun extends CRMEntity {
 					if ($fieldlist[4] == 5) {
 						$stdfilterlist[$fieldcolname] = "max($field) '" . $field_columnalias . "'";
 					}
+					if ($fieldlist[4] == 6) {
+						// PERC - percentage calculation (count records per group as percentage)
+						$stdfilterlist[$fieldcolname] = "count(*) '" . $field_columnalias . "'";
+					}
 
 					$this->queryPlanner->addTable($field_tablename);
 				}
@@ -4362,6 +4366,9 @@ class ReportRun extends CRMEntity {
 				}
 				if ($fieldlist[4] == 5) {
 					$sSQLList[] = "max(" . $fieldlist[1] . "." . $fieldlist[2] . ") " . $fieldlist[3];
+				}
+				if ($fieldlist[4] == 6) {
+					$sSQLList[] = "count(*) " . $fieldlist[3];
 				}
 			}
 		}

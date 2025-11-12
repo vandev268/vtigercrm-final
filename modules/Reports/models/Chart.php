@@ -146,15 +146,17 @@ abstract class Base_Chart extends Vtiger_Base_Model{
 						$reportColumnSQL = $this->getReportTotalColumnSQL($columnInfo);
 						$reportColumnSQLInfo = explode(' AS ', $reportColumnSQL);
 
-						if($aggregateFunction == 'AVG') {	// added as mysql will ignore null values
-							$label = "`".$this->reportRun->replaceSpecialChar($reportColumnSQLInfo[1]).'_AVG'."`";
-							$reportColumn = '(SUM('. $reportColumnSQLInfo[0] .')/COUNT(*)) AS '.$label;
-						} else {
-							$label = "`".$this->reportRun->replaceSpecialChar($reportColumnSQLInfo[1]).'_'.$aggregateFunction."`";
-							$reportColumn = $aggregateFunction. '('. $reportColumnSQLInfo[0] .') AS '.$label;
-						}
-
-						$fieldModel->set('reportcolumn', $reportColumn);
+					if($aggregateFunction == 'AVG') {	// added as mysql will ignore null values
+						$label = "`".$this->reportRun->replaceSpecialChar($reportColumnSQLInfo[1]).'_AVG'."`";
+						$reportColumn = '(SUM('. $reportColumnSQLInfo[0] .')/COUNT(*)) AS '.$label;
+					} else if($aggregateFunction == 'PERC') {	// added for percentage calculation
+						$label = "`".$this->reportRun->replaceSpecialChar($reportColumnSQLInfo[1]).'_PERC'."`";
+						// For percentage, just return the count as percentage will be calculated in the grouping
+						$reportColumn = 'COUNT(*) AS '.$label;
+					} else {
+						$label = "`".$this->reportRun->replaceSpecialChar($reportColumnSQLInfo[1]).'_'.$aggregateFunction."`";
+						$reportColumn = $aggregateFunction. '('. $reportColumnSQLInfo[0] .') AS '.$label;
+					}						$fieldModel->set('reportcolumn', $reportColumn);
 						$fieldModel->set('reportlabel', $this->reportRun->replaceSpecialChar($label));
 					} else {
 						$reportColumn = $referenceFieldReportColumnSQL;
@@ -253,6 +255,7 @@ abstract class Base_Chart extends Vtiger_Base_Model{
 			case 'AVG' : return 'LBL_AVG_OF';
 			case 'MIN' : return 'LBL_MIN_OF';
 			case 'MAX' : return 'LBL_MAX_OF';
+			case 'PERC' : return 'LBL_PERC_OF';
 		}
 	}
 
@@ -263,7 +266,7 @@ abstract class Base_Chart extends Vtiger_Base_Model{
 	 */
 	function getTranslatedLabelFromReportLabel($column) {
 		$columnLabelInfo = explode('_', trim($column, '`'));
-		$columnLabelInfo = array_diff($columnLabelInfo, array('SUM','MIN','MAX','AVG')); // added to remove aggregate functions from the graph labels
+		$columnLabelInfo = array_diff($columnLabelInfo, array('SUM','MIN','MAX','AVG','PERC')); // added to remove aggregate functions from the graph labels
 		return vtranslate(implode(' ', array_slice($columnLabelInfo, 1)), $columnLabelInfo[0]);
 	}
 
@@ -480,14 +483,20 @@ abstract class Base_Chart extends Vtiger_Base_Model{
 		$selectedDataFields = $chartModel->get('datafields');
 		$dataTypes = array();
 		foreach ($selectedDataFields as $dataField) {
-			list($tableName, $columnName, $moduleField, $fieldName, $single) = explode(':', $dataField);
-			list($relModuleName, $fieldLabel) = explode('_', $moduleField);
-			$relModuleModel = Vtiger_Module_Model::getInstance($relModuleName);
-			$fieldModel = Vtiger_Field_Model::getInstance($fieldName, $relModuleModel);
-			if ($fieldModel) {
-				$dataTypes[] = $fieldModel->getFieldDataType();
+			$dataFieldInfo = explode(':', $dataField);
+			// Check if this is a PERC calculation (position 5 would contain the aggregate function)
+			if(isset($dataFieldInfo[5]) && $dataFieldInfo[5] == 'PERC') {
+				$dataTypes[] = 'percentage';
 			} else {
-				$dataTypes[] = '';
+				list($tableName, $columnName, $moduleField, $fieldName, $single) = $dataFieldInfo;
+				list($relModuleName, $fieldLabel) = explode('_', $moduleField);
+				$relModuleModel = Vtiger_Module_Model::getInstance($relModuleName);
+				$fieldModel = Vtiger_Field_Model::getInstance($fieldName, $relModuleModel);
+				if ($fieldModel) {
+					$dataTypes[] = $fieldModel->getFieldDataType();
+				} else {
+					$dataTypes[] = '';
+				}
 			}
 		}
 		return $dataTypes;
@@ -534,6 +543,8 @@ class PieChart extends Base_Chart {
 		}
 
 		$sector = trim($sector, '`'); // remove backticks from sector
+		$rawValues = array(); // Store raw values for percentage calculation
+		
 		for($i = 0; $i < $rows; $i++) {
 			$row = $db->query_result_rowdata($result, $i);
 			$row[1]=  decode_html($row[1]);
@@ -597,9 +608,34 @@ class PieChart extends Base_Chart {
 					}
 				}
 			}
-
-			$values[] = $value;
+			$rawValues[] = $value;
 		}
+		
+		// Check if this is PERC calculation and convert counts to percentages
+		if($sectorField) {
+			$reportColumn = $sectorField->get('reportcolumninfo');
+			$reportColumnInfo = explode(':', $reportColumn);
+			$aggregateFunction = isset($reportColumnInfo[5]) ? $reportColumnInfo[5] : '';
+			
+			if($aggregateFunction == 'PERC') {
+				$total = array_sum($rawValues);
+				if($total > 0) {
+					foreach($rawValues as $index => $rawValue) {
+						$percentage = round(($rawValue / $total) * 100, 2);
+						$values[] = $percentage;
+						// Format labels to show percentage
+						$labels[$index] = $labels[$index] . ' (' . $percentage . '%)';
+					}
+				} else {
+					$values = $rawValues; // fallback to raw values if total is 0
+				}
+			} else {
+				$values = $rawValues;
+			}
+		} else {
+			$values = $rawValues;
+		}
+		
 		$data = array(	'labels' => $labels,
 						'values' => $values,
 						'links' => $links,
@@ -692,16 +728,47 @@ class VerticalbarChart extends Base_Chart {
 
 					if($queryColumnsByFieldModel) {
 						foreach($queryColumnsByFieldModel as $fieldModel) {
+							$reportColumn = $fieldModel->get('reportcolumninfo');
+							$reportColumnInfo = explode(':', $reportColumn);
+							$aggregateFunction = isset($reportColumnInfo[5]) ? $reportColumnInfo[5] : '';
+							$reportLabel = trim(strtolower($fieldModel->get('reportlabel')),'`'); // remove backticks
+							
 							if($fieldModel->get('uitype') == '71' || $fieldModel->get('uitype') == '72') {
-								$reportLabel = trim(strtolower($fieldModel->get('reportlabel')),'`'); // remove backticks
 								$value = (float) ($row[$reportLabel]);
 								$values[$j][] = CurrencyField::convertFromDollar($value, $currencyRateAndSymbol['rate']);
 							} else if($fieldModel->getFieldDataType() == 'double') {
-								$reportLabel = trim(strtolower($fieldModel->get('reportlabel')),'`'); // remove backticks
 								$values[$j][] = (float) $row[$reportLabel];
 							} else {
-								$reportLabel = trim(strtolower($fieldModel->get('reportlabel')),'`'); // remove backticks
 								$values[$j][] = (int) $row[$reportLabel];
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Convert raw counts to percentages for PERC aggregate function
+		if($queryColumnsByFieldModel) {
+			foreach($queryColumnsByFieldModel as $index => $fieldModel) {
+				$reportColumn = $fieldModel->get('reportcolumninfo');
+				$reportColumnInfo = explode(':', $reportColumn);
+				$aggregateFunction = isset($reportColumnInfo[5]) ? $reportColumnInfo[5] : '';
+				
+				if($aggregateFunction == 'PERC' && !empty($values)) {
+					// Calculate total for this column across all groups
+					$columnTotal = 0;
+					foreach($values as $groupValues) {
+						if(isset($groupValues[$index])) {
+							$columnTotal += $groupValues[$index];
+						}
+					}
+					
+					// Convert each value to percentage
+					if($columnTotal > 0) {
+						foreach($values as $groupIndex => $groupValues) {
+							if(isset($groupValues[$index])) {
+								$percentage = round(($groupValues[$index] / $columnTotal) * 100, 2);
+								$values[$groupIndex][$index] = $percentage;
 							}
 						}
 					}

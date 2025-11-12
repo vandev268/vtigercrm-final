@@ -72,9 +72,9 @@ Vtiger_List_Js(
             console.log("Link title:", accountNameCell.attr("title"));
 
             // Check if count already appended to avoid duplication
-            if (accountName.indexOf("(") === -1) {
-              // Change the text to include count in parentheses
-              var newText = accountName + " (" + contactsCount + ")";
+            if (accountName.indexOf("[") === -1) {
+              // Change the text to include count in brackets
+              var newText = accountName + " [" + contactsCount + "]";
 
               // Method 1: Try replacing text node
               var textNode = accountNameCell

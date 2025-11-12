@@ -1219,7 +1219,7 @@ class Reports_Record_Model extends Vtiger_Record_Model {
 	}
 
 	function getAggregateFunctions(){
-		$functions = array('SUM','AVG','MIN','MAX');
+		$functions = array('SUM','AVG','MIN','MAX','PERC');
 		return $functions;
 	}
 
