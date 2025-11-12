@@ -15,6 +15,12 @@
 <div class="dashboardWidgetContent">
     <input type="hidden" class="yAxisFieldType" value="{$YAXIS_FIELD_TYPE}" />
     <div class='border1px filterConditionContainer' style="padding:30px;">
+        <div id="exportChartContainer" class="pull-right" style="margin-bottom: 10px; display: none;">
+            <button type="button" class="btn btn-primary" id="exportChartBtn">
+                <i class="icon-download"></i> {vtranslate('LBL_EXPORT_CHART', $MODULE)}
+            </button>
+        </div>
+        <div class="clearfix"></div>
     <div id='chartcontent' name='chartcontent' style="min-height:500px overflowY:'auto';" data-mode='Reports'></div>
         <br>
         {if !isset($CLICK_THROUGH) || $CLICK_THROUGH neq 'true'}

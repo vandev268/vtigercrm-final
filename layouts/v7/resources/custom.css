@@ -840,3 +840,36 @@ body {
   font-weight: bold !important;
   color: #333 !important;
 }
+
+/* Export Chart Button */
+#exportChartBtn {
+  background: linear-gradient(to bottom, #5cb85c 0%, #449d44 100%) !important;
+  border-color: #449d44 !important;
+  color: white !important;
+  font-weight: bold !important;
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+  transition: all 0.3s ease !important;
+}
+
+#exportChartBtn:hover {
+  background: linear-gradient(to bottom, #449d44 0%, #357a35 100%) !important;
+  border-color: #357a35 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+#exportChartBtn i {
+  margin-right: 5px !important;
+}
+
+/* Move legend closer to pie chart */
+.jqplot-table-legend {
+  margin-left: -80px !important;
+  position: relative !important;
+}
+
+#chartcontent .jqplot-table-legend {
+  left: -100px !important;
+  position: relative !important;
+}

@@ -210,6 +210,7 @@ $languageStrings = array(
     'LBL_AUTO_GENERATED_REPORT_EMAIL' => 'This is an auto-generated email sent on behalf of a scheduled report.',
     'LBL_PIN_CHART_TO_DASHBOARD' => 'Pin Chart To DashBoard',
     'LBL_FILE_FORMAT' => 'File Format',
+    'LBL_EXPORT_CHART' => 'Export Chart as Image',
     
     'Report Type' => 'Report Type',
     'tabular' => 'Detail',

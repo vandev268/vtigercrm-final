@@ -118,6 +118,166 @@ Reports_Detail_Js(
       }
     },
 
+    registerExportChartEvent: function() {
+      jQuery('#exportChartBtn').off('click').on('click', function() {
+        // Wait a bit to ensure chart is fully rendered
+        setTimeout(function() {
+          var chartContainer = jQuery('#chartcontent');
+          
+          if (chartContainer.length > 0) {
+            // Get chart title
+            var jsonData = jQuery('input[name=data]').val();
+            var data = JSON.parse(jsonData);
+            var chartTitle = (data['title'] || 'Chart').replace(/[^a-zA-Z0-9]/g, '_');
+            
+            // Use html2canvas library or manual approach
+            // First, try manual canvas approach
+            var canvases = chartContainer.find('canvas');
+            
+            if (canvases.length > 0) {
+              // Get the chart container dimensions
+              var containerWidth = chartContainer.outerWidth();
+              var containerHeight = chartContainer.outerHeight();
+              
+              // Create a new canvas with container size
+              var exportCanvas = document.createElement('canvas');
+              exportCanvas.width = containerWidth * 2; // Higher resolution
+              exportCanvas.height = containerHeight * 2;
+              var exportCtx = exportCanvas.getContext('2d');
+              
+              // Scale for higher resolution
+              exportCtx.scale(2, 2);
+              
+              // Set white background
+              exportCtx.fillStyle = 'white';
+              exportCtx.fillRect(0, 0, containerWidth, containerHeight);
+              
+              // Draw title if exists
+              var titleElement = chartContainer.find('.jqplot-title');
+              if (titleElement.length > 0) {
+                var titleText = titleElement.text();
+                if (titleText) {
+                  exportCtx.fillStyle = '#333';
+                  exportCtx.font = 'bold 16px Arial';
+                  exportCtx.textAlign = 'center';
+                  exportCtx.fillText(titleText, containerWidth/2, 25);
+                }
+              }
+              
+              // Get canvas position relative to container
+              var firstCanvas = canvases[0];
+              var canvasOffset = jQuery(firstCanvas).position();
+              
+              // Draw all canvas layers
+              canvases.each(function(index, canvas) {
+                if (canvas.width > 0 && canvas.height > 0) {
+                  try {
+                    var canvasPos = jQuery(canvas).position();
+                    exportCtx.drawImage(canvas, canvasPos.left, canvasPos.top);
+                  } catch (e) {
+                    console.log('Could not draw canvas layer ' + index + ':', e);
+                  }
+                }
+              });
+              
+              // Draw data labels on pie chart - get positions from existing jqplot labels
+              var dataLabels = chartContainer.find('.jqplot-data-label');
+              if (dataLabels.length > 0) {
+                exportCtx.font = 'bold 14px Arial';
+                exportCtx.textAlign = 'center';
+                exportCtx.fillStyle = 'white';
+                exportCtx.strokeStyle = 'rgba(0,0,0,0.8)';
+                exportCtx.lineWidth = 2;
+                
+                dataLabels.each(function(index, label) {
+                  var $label = jQuery(label);
+                  var labelPos = $label.position();
+                  var labelText = $label.text();
+                  
+                  // Add % if not present
+                  if (labelText && !labelText.includes('%')) {
+                    labelText = labelText + '%';
+                  }
+                  
+                  if (labelText && labelPos) {
+                    var labelX = labelPos.left + ($label.width() / 2);
+                    var labelY = labelPos.top + ($label.height() / 2) + 5; // Adjust for text baseline
+                    
+                    // Draw label with stroke for visibility
+                    exportCtx.strokeText(labelText, labelX, labelY);
+                    exportCtx.fillText(labelText, labelX, labelY);
+                  }
+                });
+              }
+              
+              // Draw legend manually with proper colors
+              var legendTable = chartContainer.find('.jqplot-table-legend');
+              if (legendTable.length > 0) {
+                var legendPos = legendTable.position();
+                var legendItems = legendTable.find('tr');
+                
+                // Move legend closer to chart
+                var adjustedLegendLeft = Math.max(legendPos.left - 100, containerWidth * 0.6);
+                
+                // Define pie chart colors (jqPlot default colors)
+                var pieColors = [
+                  '#4bb2c5', '#EAA228', '#c5b47f', '#579575', '#839557', 
+                  '#958c12', '#953579', '#4b5de4', '#d8b83f', '#ff5800'
+                ];
+                
+                exportCtx.font = '12px Arial';
+                exportCtx.textAlign = 'left';
+                
+                legendItems.each(function(index, row) {
+                  var rowY = legendPos.top + (index * 20) + 15;
+                  
+                  // Draw color box with correct pie slice color
+                  var colorToUse = pieColors[index % pieColors.length];
+                  exportCtx.fillStyle = colorToUse;
+                  exportCtx.fillRect(adjustedLegendLeft, rowY - 8, 12, 12);
+                  
+                  // Draw border around color box
+                  exportCtx.strokeStyle = '#333';
+                  exportCtx.lineWidth = 1;
+                  exportCtx.strokeRect(adjustedLegendLeft, rowY - 8, 12, 12);
+                  
+                  // Draw text
+                  var labelText = jQuery(row).find('.jqplot-table-legend-label').text();
+                  if (labelText) {
+                    exportCtx.fillStyle = '#333';
+                    exportCtx.fillText(labelText, adjustedLegendLeft + 18, rowY);
+                  }
+                });
+              }
+              
+              // Create download link
+              var link = document.createElement('a');
+              link.download = chartTitle + '_' + new Date().getTime() + '.png';
+              link.href = exportCanvas.toDataURL('image/png', 1.0);
+              
+              // Trigger download
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              
+              // Show success message
+              app.helper.showSuccessNotification({
+                message: 'Chart with title and legend exported successfully!'
+              });
+            } else {
+              app.helper.showErrorNotification({
+                message: 'No chart canvas found to export!'
+              });
+            }
+          } else {
+            app.helper.showErrorNotification({
+              message: 'Chart container not found!'
+            });
+          }
+        }, 1200); // Wait a bit longer for everything to render
+      });
+    },
+
     savePinToDashBoard: function (customParams) {
       var element = jQuery("button.pinToDashboard");
       var recordId = this.getRecordId();
@@ -288,6 +448,12 @@ Vtiger_Pie_Widget_Js(
     postLoadWidget: function () {
       if (!Reports_ChartDetail_Js.isEmptyData()) {
         this.loadChart();
+        // Show export button after chart is loaded
+        var thisInstance = this;
+        setTimeout(function() {
+          jQuery('#exportChartContainer').fadeIn(300);
+          Reports_ChartDetail_Js.prototype.registerExportChartEvent();
+        }, 800);
       } else {
         this.positionNoDataMsg();
       }
