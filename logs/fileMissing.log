@@ -9383,3 +9383,23 @@ FileAccess -
 C:\xampp\htdocs\vtigercrm-final\include\utils\CommonUtils.php::checkFileAccess::398<br>
 C:\xampp\htdocs\vtigercrm-final\public.php::checkFileAccess::23<br>
 
+Traced on 2025-11-13 10:20:18
+FileAccess - 
+C:\xampp\htdocs\vtigercrm-final\include\utils\CommonUtils.php::checkFileAccess::398<br>
+C:\xampp\htdocs\vtigercrm-final\public.php::checkFileAccess::23<br>
+
+Traced on 2025-11-13 10:20:36
+FileAccess - 
+C:\xampp\htdocs\vtigercrm-final\include\utils\CommonUtils.php::checkFileAccess::398<br>
+C:\xampp\htdocs\vtigercrm-final\public.php::checkFileAccess::23<br>
+
+Traced on 2025-11-13 10:26:56
+FileAccess - 
+C:\xampp\htdocs\vtigercrm-final\include\utils\CommonUtils.php::checkFileAccess::398<br>
+C:\xampp\htdocs\vtigercrm-final\public.php::checkFileAccess::23<br>
+
+Traced on 2025-11-13 10:27:06
+FileAccess - 
+C:\xampp\htdocs\vtigercrm-final\include\utils\CommonUtils.php::checkFileAccess::398<br>
+C:\xampp\htdocs\vtigercrm-final\public.php::checkFileAccess::23<br>
+
