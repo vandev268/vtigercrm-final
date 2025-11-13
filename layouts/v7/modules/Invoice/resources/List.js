@@ -16,11 +16,6 @@ Inventory_List_Js(
       // Get IDs as objects first, then convert
       var selectedIdsObj = thisInstance.readSelectedIds(false);
       var excludedIdsObj = thisInstance.readExcludedIds(false);
-        "selectedIdsObj:",
-        selectedIdsObj,
-        "excludedIdsObj:",
-        excludedIdsObj
-      );
 
       // Convert to arrays properly
       var selectedIds = [];
@@ -39,12 +34,6 @@ Inventory_List_Js(
       } else if (excludedIdsObj && typeof excludedIdsObj === "object") {
         excludedIds = Object.keys(excludedIdsObj);
       }
-
-        "selectedIds array (corrected):",
-        selectedIds,
-        "excludedIds array (corrected):",
-        excludedIds
-      );
 
       if (selectedIds.length == 0 && excludedIds.length == 0) {
         var message = app.vtranslate("JS_PLEASE_SELECT_ONE_RECORD");
@@ -70,10 +59,6 @@ Inventory_List_Js(
             jQuery(".modal.fade.in").modal("hide");
             jQuery(".modal-backdrop").remove();
 
-            // Console log các link download PDF của từng record
-              "Base URL: " + window.location.origin + window.location.pathname
-            );
-
             if (selectedIds.length > 0) {
               selectedIds.forEach(function (recordId, index) {
                 // Correct PDFMaker download link format
@@ -88,7 +73,6 @@ Inventory_List_Js(
                   window.location.pathname +
                   "?module=Invoice&view=Detail&record=" +
                   recordId;
-
               });
 
               // Bulk export still uses our custom action
@@ -98,9 +82,6 @@ Inventory_List_Js(
                 "?module=Invoice&action=ExportPDFFiles&selected_ids=" +
                 selectedIds.join(",");
             } else {
-                "Excluded Records: " +
-                  (excludedIds.length > 0 ? excludedIds.join(",") : "None")
-              );
               var allRecordsLink =
                 window.location.origin +
                 window.location.pathname +
@@ -118,7 +99,6 @@ Inventory_List_Js(
                 enabled: true,
               },
             });
-
 
             // Prepare form data for ZIP export
             var form = jQuery('<form method="POST" action="index.php">');
@@ -161,12 +141,6 @@ Inventory_List_Js(
 
             // Handle iframe load event to hide progress indicator
             iframe.on("load", function () {
-                "Iframe content URL:",
-                iframe[0].contentWindow
-                  ? iframe[0].contentWindow.location.href
-                  : "No access to iframe content"
-              );
-
               setTimeout(function () {
                 progressIndicatorElement.progressIndicator({ mode: "hide" });
                 form.remove();
@@ -188,37 +162,24 @@ Inventory_List_Js(
 
             // Main console log with requested format
 
-              "You can copy this link to download the ZIP file directly"
-            );
-
-
             // Add create_only parameter to URL for background creation
             var zipCreationUrl = zipDownloadUrl + "&create_only=false";
 
             // Call ZIP creation in background using AJAX
             setTimeout(function () {
-
               jQuery.ajax({
                 url: zipCreationUrl,
                 type: "GET",
                 dataType: "json", // Expecting JSON response
                 success: function (response, status, xhr) {
-
                   // Hide progress indicator
                   progressIndicatorElement.progressIndicator({ mode: "hide" });
 
                   if (response.success && response.zip_download_url) {
                     // Log the download link as requested
-                      "ZIP_DOWNLOAD_LINK: " + response.zip_download_url
-                    );
-
-                      "Automatically downloading ZIP file: " +
-                        response.zip_download_url
-                    );
 
                     // Automatically download the ZIP file
                     setTimeout(function () {
-
                       // Use direct navigation method - most reliable for file downloads
                       window.location.href = response.zip_download_url;
 
@@ -232,23 +193,16 @@ Inventory_List_Js(
                             "?module=Invoice&action=CleanupZipFile&zip_file=" +
                             encodeURIComponent(response.zip_file_path);
 
-
                           jQuery.ajax({
                             url: cleanupUrl,
                             type: "GET",
-                            success: function (cleanupResponse) {
-                                "ZIP file cleanup successful:",
-                                cleanupResponse
-                              );
-                            },
-                            error: function (xhr, status, error) {
-                            },
+                            success: function (cleanupResponse) {},
+                            error: function (xhr, status, error) {},
                           });
                         }, 3000); // Wait 3 seconds for download to complete
                       }
                     }, 500);
                   } else {
-
                     // Fallback to direct navigation
                     window.location.href = zipDownloadUrl;
                   }
@@ -258,7 +212,6 @@ Inventory_List_Js(
                   iframe.remove();
                 },
                 error: function (xhr, status, error) {
-
                   // Hide progress indicator
                   progressIndicatorElement.progressIndicator({ mode: "hide" });
 
