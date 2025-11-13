@@ -82,7 +82,6 @@ Calendar_Calendar_Js('Calendar_SharedCalendar_Js', {
 					});
 				}
 			} else {
-				console.log("network error : ",e);
 			}
 		});
 	},
@@ -158,7 +157,6 @@ Calendar_Calendar_Js('Calendar_SharedCalendar_Js', {
 				app.helper.hideModal();
 				app.helper.showSuccessNotification({'message':message});
 			} else {
-				console.log("error : ",e);
 			}
 		});
 
@@ -222,7 +220,6 @@ Calendar_Calendar_Js('Calendar_SharedCalendar_Js', {
 					}
 				});
 			} else {
-				console.log("network error : ",e);
 			}
 		});
 	},

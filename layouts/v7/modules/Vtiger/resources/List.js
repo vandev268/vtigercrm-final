@@ -1425,7 +1425,7 @@ Vtiger.Class(
           contributor.select2("val", "");
           contributor.val("");
         } else {
-          console.log("contributor clearing now handled : ", contributor);
+          // contributor clearing handled
         }
       };
 
@@ -2451,44 +2451,42 @@ Vtiger.Class(
     registerReloadTotalCountEvent: function () {
       var thisInstance = this;
       var listViewContainer = thisInstance.getListViewContainer();
-      
+
       listViewContainer.on("click", "#reloadTotalCount", function (e) {
         e.stopPropagation();
         var button = jQuery(this);
         var icon = button.find("i");
-        
+
         // Add spinning animation
         icon.addClass("fa-spin");
         button.prop("disabled", true);
-        
+
         // Reload total count
         var totalRecordsElement = listViewContainer.find("#totalCount");
         var totalCountDisplay = listViewContainer.find("#totalCountDisplay");
-        
-        thisInstance
-          .getRecordsCount()
-          .then(
-            function (res) {
-              // Success callback
-              if (res && res.count) {
-                totalRecordsElement.val(res.count);
-                totalCountDisplay.text(res.count);
-                listViewContainer
-                  .find(".totalNumberOfRecordsDisplay")
-                  .removeClass("hide");
-              }
-              // Remove spinning animation
-              icon.removeClass("fa-spin");
-              button.prop("disabled", false);
-            },
-            function (error) {
-              // Error callback
-              totalCountDisplay.text("?");
-              // Remove spinning animation
-              icon.removeClass("fa-spin");
-              button.prop("disabled", false);
+
+        thisInstance.getRecordsCount().then(
+          function (res) {
+            // Success callback
+            if (res && res.count) {
+              totalRecordsElement.val(res.count);
+              totalCountDisplay.text(res.count);
+              listViewContainer
+                .find(".totalNumberOfRecordsDisplay")
+                .removeClass("hide");
             }
-          );
+            // Remove spinning animation
+            icon.removeClass("fa-spin");
+            button.prop("disabled", false);
+          },
+          function (error) {
+            // Error callback
+            totalCountDisplay.text("?");
+            // Remove spinning animation
+            icon.removeClass("fa-spin");
+            button.prop("disabled", false);
+          }
+        );
       });
     },
     initializePaginationEvents: function () {

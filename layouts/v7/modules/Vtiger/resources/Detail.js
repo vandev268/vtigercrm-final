@@ -2436,8 +2436,7 @@ Vtiger.Class(
     },
 
     getRelatedRecordsCount: function (recordId, moduleName) {
-      console.log("=== getRelatedRecordsCount CALLED ===");
-      console.log(
+      // logging disabled
         "Parameters - recordId:",
         recordId,
         "moduleName:",
@@ -2453,9 +2452,9 @@ Vtiger.Class(
           mode: "getRelatedRecordsCount",
         },
       };
-      console.log("Request params:", params);
+      // logging disabled
       app.request.get(params).then(function (err, data) {
-        console.log("Request completed - err:", err, "data:", data);
+        // logging disabled
         if (err == null) {
           aDeferred.resolve(data);
         }
@@ -2467,33 +2466,32 @@ Vtiger.Class(
       var self = this;
       var recordId = self.getRecordId();
       var moduleName = app.getModuleName();
-      console.log("=== updateRelatedRecordsCount CALLED ===");
-      console.log("recordId:", recordId);
-      console.log("moduleName:", moduleName);
+      // logging disabled
+      // logging disabled
+      // logging disabled
       self.getRelatedRecordsCount(recordId, moduleName).then(function (data) {
-        console.log("=== getRelatedRecordsCount RESPONSE ===");
-        console.log("Full data:", data);
+        // logging disabled
+        // logging disabled
         jQuery.each(data, function (key, value) {
-          console.log("Processing relation - ID:", key, "Count:", value);
+          // logging disabled
           var element = new Object(
             jQuery("a", "li[data-relation-id=" + key + "]")
           );
-          console.log("Element found:", element.length > 0);
+          // logging disabled
           var numberEle = element.find(".numberCircle");
-          console.log(
             "numberCircle element:",
             numberEle.length > 0,
             "Current text:",
             numberEle.text()
           );
           numberEle.text(value);
-          console.log("Updated numberCircle text to:", value);
+          // logging disabled
           if (parseInt(value) > 0) {
             numberEle.removeClass("hide");
-            console.log("Showed badge (removed hide class)");
+            // logging disabled
           } else {
             numberEle.addClass("hide");
-            console.log("Hidden badge (added hide class)");
+            // logging disabled
           }
           element.attr("recordscount", value);
         });
@@ -3206,8 +3204,8 @@ Vtiger.Class(
     },
 
     registerEvents: function () {
-      console.log("=== Detail.registerEvents CALLED ===");
-      console.log("Module:", app.getModuleName(), "Record:", app.getRecordId());
+      // logging disabled
+      // logging disabled
       this._super();
       this.registerEventsForRelatedList();
       var detailContentsHolder = this.getContentHolder();
@@ -3297,7 +3295,6 @@ Vtiger.Class(
           app.helper.hideProgress();
         });
       });
-      console.log(
         "=== CALLING updateRelatedRecordsCount from registerEvents ==="
       );
       this.updateRelatedRecordsCount();

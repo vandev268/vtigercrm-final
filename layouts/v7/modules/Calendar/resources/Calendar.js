@@ -218,7 +218,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 					}
 				});
 			} else {
-				console.log("network error : ", e);
 			}
 		});
 	},
@@ -288,7 +287,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 								});
 							}
 						} else {
-							console.log("error in response : ", e);
 						}
 						render(events);
 						activeFeeds.removeAttr('disabled');
@@ -350,7 +348,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 				feedCheckbox.removeAttr('disabled');
 				app.helper.hideProgress();
 			}, function (e) {
-				console.log("error while fetching events : ", feedCheckbox, e);
 			});
 		}
 	},
@@ -595,7 +592,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 				app.helper.hideModal();
 				app.helper.showSuccessNotification({'message': message});
 			} else {
-				console.log("error occured while saving : ", params, e);
 			}
 		});
 	},
@@ -686,7 +682,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 					}
 				});
 			} else {
-				console.log("network error : ", e);
 			}
 		});
 	},
@@ -723,7 +718,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 					message: app.vtranslate('JS_CALENDAR_VIEW_DELETED_SUCCESSFULLY')
 				});
 			} else {
-				console.log("error : ", e);
 			}
 			app.helper.hideProgress();
 		});
@@ -759,7 +753,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 					aDeferred.reject(result);
 				}
 			} else {
-				console.log("error : ", e);
 			}
 		});
 		return aDeferred.promise();
@@ -893,7 +886,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 					}
 				});
 			} else {
-				console.log("network error : ", e);
 			}
 		});
 	},
@@ -992,7 +984,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 //thisInstance.restoreWidgetState(widget);
 					app.event.trigger(Calendar_Calendar_Js.feedsWidgetPostLoadEvent, widget);
 				} else {
-					console.log("error in response : ", e);
 				}
 			});
 		});
@@ -1161,7 +1152,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 									});
 								}
 							} else {
-								console.log("error in response : ", e);
 							}
 							activeFeeds.each(function () {
 								var feedCheckbox = jQuery(this);
@@ -1230,7 +1220,6 @@ Vtiger.Class("Calendar_Calendar_Js", {
 				thisInstance.getCalendarViewContainer().fullCalendar('addEventSource', events);
 				feedCheckbox.removeAttr('disabled');
 			}, function (e) {
-				console.log("error while fetching events : ", feedCheckbox, e);
 			});
 		}
 	},

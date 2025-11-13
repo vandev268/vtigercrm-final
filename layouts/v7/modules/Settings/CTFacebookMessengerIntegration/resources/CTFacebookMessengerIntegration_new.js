@@ -685,7 +685,6 @@ Vtiger.Class(
 
         AppConnector.request(params).then(function (data) {
           app.showModalWindow(data, function (data) {
-            //console.log(data);
             $("#active").prop("checked", true);
           });
         });

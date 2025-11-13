@@ -184,10 +184,7 @@ Reports_Detail_Js(
                         canvasPos.top
                       );
                     } catch (e) {
-                      console.log(
-                        "Could not draw canvas layer " + index + ":",
-                        e
-                      );
+                      // Could not draw canvas layer
                     }
                   }
                 });

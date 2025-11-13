@@ -7,7 +7,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-console.log("✓✓✓ Accounts/List.js is LOADED ✓✓✓");
 
 Vtiger_List_Js(
   "Accounts_List_Js",
@@ -17,36 +16,29 @@ Vtiger_List_Js(
      * Function to append contacts count to account names in list view
      */
     appendContactsCount: function () {
-      console.log("appendContactsCount() called");
 
       // Check if accountsContactsCount variable exists
       if (typeof accountsContactsCount === "undefined") {
-        console.log("accountsContactsCount is undefined");
         return;
       }
 
-      console.log("accountsContactsCount:", accountsContactsCount);
 
       var thisInstance = this;
       var listViewTable = jQuery("#listview-table");
 
-      console.log("Table found:", listViewTable.length > 0);
 
       var allRows = listViewTable.find("tr.listViewEntries");
 
-      console.log("Rows found:", allRows.length);
 
       // Find all account name links in the list view
       allRows.each(function (index) {
         var row = jQuery(this);
         var recordId = row.data("id");
 
-        console.log("--- Processing row " + index + ", recordId:", recordId);
 
         // Get the count for this account
         var contactsCount = accountsContactsCount[recordId];
 
-        console.log("Count for record " + recordId + ":", contactsCount);
 
         if (typeof contactsCount !== "undefined") {
           // Find the account name cell - look for link with name field
@@ -63,13 +55,9 @@ Vtiger_List_Js(
               .first();
           }
 
-          console.log("Account name cell found:", accountNameCell.length);
 
           if (accountNameCell.length > 0) {
             var accountName = accountNameCell.text().trim();
-            console.log("Current account name:", accountName);
-            console.log("Link href:", accountNameCell.attr("href"));
-            console.log("Link title:", accountNameCell.attr("title"));
 
             // Check if count already appended to avoid duplication
             if (accountName.indexOf("[") === -1) {
@@ -86,21 +74,15 @@ Vtiger_List_Js(
 
               if (textNode.length > 0) {
                 textNode[0].nodeValue = newText;
-                console.log("✓ Updated text node to:", newText);
               } else {
                 // Method 2: If no text node, try setting text directly
                 accountNameCell.text(newText);
-                console.log("✓ Set text directly to:", newText);
               }
             } else {
-              console.log("Already has parentheses, skipping");
             }
           } else {
-            console.log("ERROR: Could not find account name cell");
-            console.log("Row HTML:", row.html().substring(0, 200));
           }
         } else {
-          console.log("No count data for record:", recordId);
         }
       });
     },
@@ -109,19 +91,16 @@ Vtiger_List_Js(
      * Override registerEvents to add our custom logic
      */
     registerEvents: function () {
-      console.log("Accounts_List_Js.registerEvents() called");
 
       // Call parent registerEvents
       this._super();
 
-      console.log("Parent registerEvents done");
 
       // Append contacts count after page load
       var thisInstance = this;
 
       // Use setTimeout to wait for DOM to be ready
       setTimeout(function () {
-        console.log("Timeout 500ms - calling appendContactsCount");
         thisInstance.appendContactsCount();
       }, 500);
 

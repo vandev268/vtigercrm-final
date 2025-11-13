@@ -28,8 +28,9 @@
         }
 		if($.isFunction(vtJqPlotInterface))
             vtChart.prototype = new vtJqPlotInterface();
-        else
-            console.log('supported interface not found!');
+        else {
+            // supported interface not found
+        }
            
         return this.each(function(index,element){
             var jQElement = jQuery(element).empty(); /* Clear any existing content to avoid overlapping redraw */

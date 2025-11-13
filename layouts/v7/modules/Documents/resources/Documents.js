@@ -307,7 +307,6 @@ Vtiger.Class('Documents_Index_Js', {
 				tab.html(resp);
 				vtUtils.applyFieldElementsView(tab);
 			} else {
-				console.log("error while loading tab : ",e);
 			}
 		});
 		tab.data('tabLoaded',true);

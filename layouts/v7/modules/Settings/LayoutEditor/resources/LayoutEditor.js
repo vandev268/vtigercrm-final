@@ -1631,7 +1631,6 @@ Vtiger.Class('Settings_LayoutEditor_Js', {
 	updateHeaderFieldMeta: function (params) {
 		if (params.hasOwnProperty('headerfield')) {
 			if (!params.hasOwnProperty('fieldid')) {
-				console.info("params must contain field id : ", params);
 			} else {
 				var fieldId = params.fieldid;
 				var prevHeaderFlagValue = 0;

@@ -317,7 +317,7 @@ var vtJqPlotInterface = function() {
             case 'horizontalbar' : this.renderHorizontalbar();break;
             case 'linechart' : this.renderLine();break;
             case 'column' : this.renderColumn();break;
-            default : console.log('jqplot renderer not supported');
+            default : // jqplot renderer not supported
         }
 
         this.postRendering();

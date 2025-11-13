@@ -193,9 +193,7 @@ Vtiger.Class('Settings_PickListDependency_Js', {
 			form.find('.errorMessage').addClass('hide');
 			var result = app.vtranslate('JS_SELECT_SOME_VALUE');
 			if(sourceFieldValue == '') {
-				console.log(result);
 			}else if(targetFieldValue == '') {
-				console.log(result);
 			}
 		}
 	},

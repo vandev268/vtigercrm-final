@@ -66,44 +66,23 @@ jQuery.Class(
     },
 
     updateRelatedRecordsCount: function (relationId) {
-      console.log("=== RelatedList.updateRelatedRecordsCount CALLED ===");
-      console.log("relationId:", relationId);
       var recordId = app.getRecordId();
       var moduleName = app.getModuleName();
-      console.log("recordId:", recordId, "moduleName:", moduleName);
       var detailInstance = new Vtiger_Detail_Js();
       detailInstance
         .getRelatedRecordsCount(recordId, moduleName, relationId)
         .then(function (data) {
-          console.log("=== RelatedList got count data ===");
-          console.log("Full data:", data);
           var relatedRecordsCount = data[relationId];
-          console.log(
-            "Count for relation",
-            relationId,
-            ":",
-            relatedRecordsCount
-          );
           var element = new Object(
             jQuery("a", "li[data-relation-id=" + relationId + "]")
           );
-          console.log("Found element:", element.length);
           // we should only show if there are any related records
           var numberEle = element.find(".numberCircle");
-          console.log(
-            "Found numberCircle:",
-            numberEle.length,
-            "Current text:",
-            numberEle.text()
-          );
           numberEle.text(relatedRecordsCount);
-          console.log("Updated numberCircle to:", relatedRecordsCount);
           if (relatedRecordsCount > 0) {
             numberEle.removeClass("hide");
-            console.log("Showing badge (removed hide)");
           } else {
             numberEle.addClass("hide");
-            console.log("Hiding badge (added hide)");
           }
           element.attr("recordscount", relatedRecordsCount);
         });

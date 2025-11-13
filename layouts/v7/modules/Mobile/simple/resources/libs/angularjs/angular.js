@@ -1495,7 +1495,6 @@ function getNgAttribute(element, ngAttr) {
            <p>The controller could not be instantiated, due to relying
               on automatic function annotations (which are disabled in
               strict mode). As such, the content of this section is not
-              interpolated, and there should be an error in your web console.
            </p>
        </div>
    </div>
@@ -6765,14 +6764,12 @@ function $TemplateCacheProvider() {
  * ```js
  * function linkingFn(scope, elm, attrs, ctrl) {
  *   // get the attribute value
- *   console.log(attrs.ngModel);
  *
  *   // change the attribute
  *   attrs.$set('ngModel', 'new value');
  *
  *   // observe changes to interpolated attribute
  *   attrs.$observe('ngModel', function(value) {
- *     console.log('ngModel has changed value to ' + value);
  *   });
  * }
  * ```
@@ -9165,7 +9162,6 @@ function $DocumentProvider() {
  * @description
  * Any uncaught exception in angular expressions is delegated to this service.
  * The default implementation simply delegates to `$log.error` which logs it into
- * the browser console.
  *
  * In unit tests, if `angular-mocks.js` is loaded, this service is overridden by
  * {@link ngMock.$exceptionHandler mock $exceptionHandler} which aids in testing.
@@ -9182,7 +9178,6 @@ function $DocumentProvider() {
  * ```
  *
  * This example will override the normal action of `$exceptionHandler`, to make angular
- * exceptions fail hard when they happen, instead of just logging to the console.
  *
  * <hr />
  * Note, that code executed in event-listeners (even those registered using jqLite's `on`/`bind`
@@ -12398,11 +12393,9 @@ function $LogProvider() {
 
     function consoleLog(type) {
       var console = $window.console || {},
-          logFn = console[type] || console.log || noop,
           hasApply = false;
 
       // Note: reading logFn.apply throws an error in IE11 in IE8 document mode.
-      // The reason behind this is that console.log has type "object" in IE8...
       try {
         hasApply = !!logFn.apply;
       } catch (e) {}
@@ -12418,7 +12411,6 @@ function $LogProvider() {
       }
 
       // we are IE which either doesn't have window.console => this is noop and we do nothing,
-      // or we are IE where console.log doesn't have apply so we log at least first 2 args
       return function(arg1, arg2) {
         logFn(arg1, arg2 == null ? '' : arg2);
       };
@@ -23245,7 +23237,6 @@ var ngControllerDirective = [function() {
             getAndClearSevereErrors().then(function(filteredLog) {
               expect(filteredLog.length).toEqual(0);
               if (filteredLog.length) {
-                console.log('browser console errors: ' + util.inspect(filteredLog));
               }
             });
           }
@@ -28541,7 +28532,6 @@ var minlengthDirective = function() {
 
 if (window.angular.bootstrap) {
   //AngularJS is already loaded, so we can return here...
-  console.log('WARNING: Tried to load angular more than once.');
   return;
 }
 

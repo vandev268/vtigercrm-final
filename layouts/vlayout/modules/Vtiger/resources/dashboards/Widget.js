@@ -547,7 +547,6 @@ Vtiger_Widget_Js('Vtiger_Barchat_Widget_Js',{},{
             }
 		});
 //		this.getPlotContainer(false).on('jqPlotDataClick', function(){
-//			console.log('here');
 //		});
 //		jQuery.jqplot.eventListenerHooks.push(['jqPlotDataClick', myClickHandler]);
 	}
