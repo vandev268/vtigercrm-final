@@ -2487,6 +2487,29 @@ Vtiger.Class(
             button.prop("disabled", false);
           }
         );
+
+        thisInstance.getRecordsCount().then(
+          function (res) {
+            // Success callback
+            if (res && res.count) {
+              totalRecordsElement.val(res.count);
+              totalCountDisplay.text(res.count);
+              listViewContainer
+                .find(".totalNumberOfRecordsDisplay")
+                .removeClass("hide");
+            }
+            // Remove spinning animation
+            icon.removeClass("fa-spin");
+            button.prop("disabled", false);
+          },
+          function (error) {
+            // Error callback
+            totalCountDisplay.text("?");
+            // Remove spinning animation
+            icon.removeClass("fa-spin");
+            button.prop("disabled", false);
+          }
+        );
       });
     },
     initializePaginationEvents: function () {

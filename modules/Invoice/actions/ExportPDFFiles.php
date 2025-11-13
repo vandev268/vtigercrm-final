@@ -160,8 +160,12 @@ class Invoice_ExportPDFFiles_Action extends Vtiger_Action_Controller {
             require_once 'modules/PDFMaker/models/PDFMaker.php';
         }
         
-        $zipFileName = $moduleName . '_PDFs_' . date('YmdHis') . '.zip';
-        $zipFilePath = 'cache/letters/zip/' . $zipFileName;
+        // Create custom ZIP filename with Vietnamese name and date format
+        $currentDate = date('d/m/Y');
+        $zipFileName = "Danh Sách Giấy Báo Trúng Tuyển " . $currentDate . '.zip';
+        // Clean filename for filesystem (replace / with -)
+        $zipFileNameSafe = str_replace('/', '-', $zipFileName);
+        $zipFilePath = 'cache/letters/zip/' . $zipFileNameSafe;
         
         error_log("ZIP file path: " . $zipFilePath);
         
@@ -344,13 +348,24 @@ class Invoice_ExportPDFFiles_Action extends Vtiger_Action_Controller {
     
     private function getPDFFileName($recordId, $moduleName) {
         $recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
-        $sequenceNumber = getModuleSequenceNumber($moduleName, $recordId);
         
         // Get record display name for filename
         $displayName = $recordModel->getDisplayName();
-        $displayName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $displayName);
         
-        return $moduleName . '_' . $sequenceNumber . '_' . $displayName . '.pdf';
+        // Decode HTML entities to get proper Vietnamese characters
+        $displayName = html_entity_decode($displayName, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        
+        // Remove any remaining HTML tags
+        $displayName = strip_tags($displayName);
+        
+        // Only remove characters that are truly problematic for filenames
+        // Keep Vietnamese characters, spaces, and common punctuation
+        $displayName = preg_replace('/[\\\\\/\:\*\?\"\<\>\|]/', '_', $displayName);
+        
+        // Trim spaces and remove multiple spaces
+        $displayName = preg_replace('/\s+/', ' ', trim($displayName));
+        
+        return $displayName . '.pdf';
     }
     
     private function downloadFile($filePath, $fileName) {

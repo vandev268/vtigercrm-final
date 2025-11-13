@@ -7,7 +7,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-
 Vtiger_List_Js(
   "Accounts_List_Js",
   {},
@@ -16,29 +15,23 @@ Vtiger_List_Js(
      * Function to append contacts count to account names in list view
      */
     appendContactsCount: function () {
-
       // Check if accountsContactsCount variable exists
       if (typeof accountsContactsCount === "undefined") {
         return;
       }
 
-
       var thisInstance = this;
       var listViewTable = jQuery("#listview-table");
 
-
       var allRows = listViewTable.find("tr.listViewEntries");
-
 
       // Find all account name links in the list view
       allRows.each(function (index) {
         var row = jQuery(this);
         var recordId = row.data("id");
 
-
         // Get the count for this account
         var contactsCount = accountsContactsCount[recordId];
-
 
         if (typeof contactsCount !== "undefined") {
           // Find the account name cell - look for link with name field
@@ -54,7 +47,6 @@ Vtiger_List_Js(
               .not('[title="Details"]')
               .first();
           }
-
 
           if (accountNameCell.length > 0) {
             var accountName = accountNameCell.text().trim();
@@ -91,10 +83,8 @@ Vtiger_List_Js(
      * Override registerEvents to add our custom logic
      */
     registerEvents: function () {
-
       // Call parent registerEvents
       this._super();
-
 
       // Append contacts count after page load
       var thisInstance = this;

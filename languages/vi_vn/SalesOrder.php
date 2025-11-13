@@ -61,4 +61,6 @@ $languageStrings = array(
 
 $jsLanguageStrings = array(
 "JS_PLEASE_REMOVE_LINE_ITEM_THAT_IS_DELETED" => "Please remove line item that is deleted",
+"JS_EXPORT_PDF_FILES_CONFIRMATION" => "Bạn có chắc chắn muốn xuất file PDF cho các đơn hàng đã chọn?",
+"JS_EXPORTING_PDF_FILES" => "Đang xuất file PDF...",
 );
