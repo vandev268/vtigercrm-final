@@ -13,6 +13,7 @@ $languageStrings = array(
 	//DetailView Actions
 	'SINGLE_Invoice' => 'Invoice',
 	'LBL_EXPORT_TO_PDF' => 'Export to PDF',
+	'LBL_EXPORT_PDF_FILES' => 'Export PDF Files',
     'LBL_SEND_MAIL_PDF' => 'Send Email with PDF',
 
 	//Basic strings
@@ -50,4 +51,6 @@ $languageStrings = array(
 
 $jsLanguageStrings = array(
 	'JS_PLEASE_REMOVE_LINE_ITEM_THAT_IS_DELETED' => 'Please remove line item that is deleted',
+	'JS_EXPORT_PDF_FILES_CONFIRMATION' => 'Are you sure you want to export PDF files for selected invoices?',
+	'JS_EXPORTING_PDF_FILES' => 'Exporting PDF files...',
 );

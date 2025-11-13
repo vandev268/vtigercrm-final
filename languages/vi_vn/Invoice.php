@@ -20,6 +20,7 @@ $languageStrings = array(
 	'LBL_ADD_RECORD' => 'Thêm hóa đơn',
 	'LBL_BALANCE' => 'Số dư',
 	'LBL_EXPORT_TO_PDF' => 'Chuyển sang file PDF',
+	'LBL_EXPORT_PDF_FILES' => 'Xuất file PDF hàng loạt',
 	'LBL_INVOICE_INFORMATION' => 'Chi tiết hóa đơn',
 	'LBL_IS_DELETED_FROM_THE_SYSTEM_PLEASE_REMOVE_OR_REPLACE_THIS_ITEM' => 'Được xóa khỏi hệ thông. Hãy loại bỏ hoặc thay thế mục này',
 	'LBL_NOT_A_BUNDLE' => 'Không phải một nhóm',
@@ -42,4 +43,6 @@ $languageStrings = array(
 
 $jsLanguageStrings = array(
 	'JS_PLEASE_REMOVE_LINE_ITEM_THAT_IS_DELETED' => 'Làm ơn di chuyển chi tiết đơn hàng đã bị xóa',
+	'JS_EXPORT_PDF_FILES_CONFIRMATION' => 'Bạn có chắc chắn muốn xuất file PDF cho các hóa đơn đã chọn?',
+	'JS_EXPORTING_PDF_FILES' => 'Đang xuất file PDF...',
 );

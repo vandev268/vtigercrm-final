@@ -79,13 +79,13 @@ $dbconfigoption['ssl'] = false;
 
 $host_name = $dbconfig['db_hostname'];
 
-$site_URL = 'http://localhost/vtigercrm/';
+$site_URL = 'http://localhost/vtigercrm-final/';
 // $site_URL = 'http://shonta-miry-nobuko.ngrok-free.dev/';
 
 // url for customer portal (Example: http://vtiger.com/portal)
 $PORTAL_URL = $site_URL.'/customerportal';
 // root directory path
-$root_directory = 'C:\xampp\htdocs\vtigercrm/';
+$root_directory = 'C:\xampp\htdocs\vtigercrm-final/';
 
 // cache direcory path
 $cache_dir = 'cache/';
